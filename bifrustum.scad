@@ -1,16 +1,16 @@
 include <config.scad>;
 
 $fn=180;
+center_offset=height*bead_hole_radius/(bead_hole_radius+string_hole_radius)-height/2;
 module body() {
     module body_profile() {
         union(){
             minkowski() {
-                translate([bead_hole_radius+edge_radius, height/2 - bead_hole_depth+edge_radius, 0]) square([width/2-bead_hole_radius-edge_radius*2, bead_hole_depth-edge_radius*2]);
+                polygon([[bead_hole_radius+edge_radius, height/2-edge_radius], [width/2-edge_radius, center_offset], [bead_hole_radius+edge_radius, center_offset]]);
                 circle(edge_radius);
             }
-            translate([width/4, 0, 0]) square([width/2, height-edge_radius*2], center=true); 
             minkowski() {
-                translate([string_hole_radius+edge_radius, -height/2+edge_radius, 0]) square([width/2-string_hole_radius-edge_radius*2, height - bead_hole_depth-edge_radius*2]);
+                polygon([[string_hole_radius, -height/2+edge_radius], [width/2-edge_radius, center_offset], [string_hole_radius, center_offset]]);
                 circle(edge_radius);
             }
         }
