@@ -1,18 +1,23 @@
 include <config.scad>;
 
 $fn=180;
-center_offset=height*bead_hole_radius/(bead_hole_radius+string_hole_radius)-height/2;
+angle=45;
+
+top_height=tan(angle)*(width/2-edge_radius - (bead_hole_radius+ edge_radius));
+bottom_height=tan(angle)*(width/2-edge_radius - string_hole_radius);
+center_offset=((height/2-top_height) + (-height/2 + bottom_height))/2;
 module body() {
     module body_profile() {
         union(){
             minkowski() {
-                polygon([[bead_hole_radius+edge_radius, height/2-edge_radius], [width/2-edge_radius, center_offset], [bead_hole_radius+edge_radius, center_offset]]);
+                polygon([[bead_hole_radius+edge_radius, height/2-edge_radius], [width/2-edge_radius, height/2-top_height-edge_radius], [bead_hole_radius+edge_radius, height/2-top_height-edge_radius]]);
                 circle(edge_radius);
             }
             minkowski() {
-                polygon([[string_hole_radius, -height/2+edge_radius], [width/2-edge_radius, center_offset], [string_hole_radius, center_offset]]);
+                polygon([[string_hole_radius, -height/2+edge_radius], [width/2-edge_radius, -height/2 + bottom_height+edge_radius], [string_hole_radius, -height/2 + bottom_height+edge_radius]]);
                 circle(edge_radius);
             }
+            translate([width/4, center_offset, 0]) square([width/2, (height-top_height-bottom_height-2*edge_radius)], center=true);
         }
     }
 
